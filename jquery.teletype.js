@@ -1,12 +1,12 @@
 /*
 * Teletype jQuery Plugin
-* @version 0.1.6
+* @version 0.1.5
 *
 * @author Steve Whiteley
 * @see http://teletype.rocks
 * @see https://github.com/stvwhtly/jquery-teletype-plugin
 *
-* Copyright (c) 2015 Steve Whiteley
+* Copyright (c) 2014 Steve Whiteley
 * Dual licensed under the MIT or GPL Version 2 licenses.
 *
 */
@@ -32,7 +32,7 @@
 				}
 			}
 			current.position = 0;
-			setCurrentString();
+			current.string = settings.text[current.index];
 			if ( typeof( settings.callbackNext ) == 'function' ) {
 				settings.callbackNext( current, object );
 			}
@@ -91,8 +91,10 @@
 					window.setTimeout( function() {
 						window.setTimeout( type, delay( settings.typeDelay ) );
 					}, settings.delay );
-				} else if ( typeof( settings.callbackFinished ) == 'function' ) {
-					settings.callbackFinished( object );
+				} else {
+					if ( typeof( settings.callbackFinished ) == 'function' ) {
+						settings.callbackFinished();
+					}
 				}
 			}
 			if ( typeof( settings.callbackType ) == 'function' ) {
@@ -125,14 +127,11 @@
 			}
 			return time;
 		};
-		var setCurrentString = function() {
-			current.string = settings.text[current.index].replace(/\n/g, "\\n");
-		}
 		this.setCursor = function( cursor ) {
 			$('.teletype-cursor', self).text( cursor );
 		};
 		return this.each( function() {
-			setCurrentString();
+			current.string = settings.text[current.index];
 			self.addClass( 'teletype' ).empty();
 			output = $( '<span />' ).addClass( 'teletype-text' ).appendTo( self );
 			if ( settings.cursor ) {
